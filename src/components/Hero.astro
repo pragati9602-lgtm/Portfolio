@@ -1,0 +1,343 @@
+---
+import Reveal from './Reveal.astro';
+import { site } from '../data/site';
+
+// Cropped, registered exports of assets/hero (see scripts/prepare-hero.mjs)
+const art = (name: string) => ({
+  src: `/hero/${name}-960.webp`,
+  srcset: `/hero/${name}-600.webp 600w, /hero/${name}-960.webp 960w`,
+});
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__inner wrap">
+    <div class="hero__copy">
+      <p class="eyebrow">{site.role}</p>
+      <h1 id="hero-title" class="hero__title">
+        Every design has a story <em>steeped</em> in it.
+      </h1>
+      <p class="hero__sub">
+        I'm {site.name}. I look at designs long enough to start seeing the stories underneath, and I
+        design brands that carry theirs.
+        <span class="hero__instruction">
+          <span class="when-fine">Move your cursor over the stain.</span>
+          <span class="when-coarse">Drag your finger across the stain.</span>
+        </span>
+      </p>
+      <div class="hero__ctas">
+        <a class="btn btn--primary" href="/work">See the work</a>
+        <a class="btn btn--ghost" href="#contact">Say hello</a>
+      </div>
+      <button class="hero__toggle" data-reveal-toggle="hero-reveal" aria-pressed="false">
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"
+            stroke-dasharray="36 4 6 3"></circle>
+          <circle cx="10" cy="10" r="2.5" fill="currentColor"></circle>
+        </svg>
+        <span class="hero__toggle-off">Reveal the story underneath</span>
+        <span class="hero__toggle-on">Let it steep again</span>
+      </button>
+    </div>
+
+    <div class="hero__art">
+      <Reveal
+        id="hero-reveal"
+        top={art('chai-stain')}
+        bottom={art('illustration')}
+        alt="Gouache illustration of a person asleep on a giant orange slice, dressed in denim dungarees covered in tiny foods: a burger, donut, sandwich, pizza, popcorn and drumsticks, hidden beneath a chai stain."
+        width={960}
+        height={890}
+        sizes="(min-width: 60rem) 48vw, 92vw"
+        eager
+        cursor="look closer"
+        cursorOnce
+        brush={0.1}
+        resteepDelay={1400}
+        resteepDuration={1800}
+        payoff={0.5}
+        hold={4500}
+        autoStir={2600}
+      />
+      <p class="hero__note hand" aria-live="polite">
+        <svg class="hero__note-arrow" viewBox="0 0 90 60" aria-hidden="true">
+          <path d="M84 52 C 60 54, 30 44, 14 14" fill="none" stroke="currentColor" stroke-width="2.4"
+            stroke-linecap="round" pathLength="1"></path>
+          <path d="M6 22 L 13 12 L 24 17" fill="none" stroke="currentColor" stroke-width="2.4"
+            stroke-linecap="round" stroke-linejoin="round" pathLength="1"></path>
+        </svg>
+        <span class="hero__note-text">See? There's always something underneath.</span>
+      </p>
+    </div>
+  </div>
+
+  <a class="hero__scroll" href="#layers">
+    <span>scroll to see more layers</span>
+    <svg viewBox="0 0 16 24" aria-hidden="true">
+      <path d="M8 2v18M2 14l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.6"
+        stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+  </a>
+</section>
+
+<script>
+  const hero = document.querySelector<HTMLElement>('.hero')!;
+  const reveal = document.getElementById('hero-reveal')!;
+  const showScroll = () => hero.classList.add('show-scroll');
+
+  window.setTimeout(showScroll, 5000);
+
+  reveal.addEventListener('reveal:payoff', () => {
+    hero.classList.add('show-note');
+    showScroll();
+  });
+  reveal.addEventListener('reveal:open', () => hero.classList.add('is-open'));
+  reveal.addEventListener('reveal:resteep', () => hero.classList.remove('is-open', 'show-note'));
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    align-items: center;
+    padding-block: clamp(6rem, 4rem + 6vw, 8rem) clamp(4.5rem, 3rem + 4vw, 6rem);
+    overflow: hidden;
+  }
+
+  .hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: clamp(2rem, 1rem + 4vw, 5rem);
+  }
+
+  .hero__copy {
+    display: grid;
+    gap: 1.4rem;
+    justify-items: start;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero__title {
+    font-size: var(--step-4);
+    font-weight: 450;
+  }
+
+  .hero__title em {
+    font-style: italic;
+    color: var(--chai);
+    font-variation-settings: 'SOFT' 100, 'WONK' 1;
+  }
+
+  .hero__sub {
+    max-width: 34rem;
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+    line-height: 1.5;
+  }
+
+  .hero__instruction {
+    display: block;
+    margin-top: 0.6rem;
+    font-family: var(--font-hand);
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--chai);
+  }
+
+  .when-coarse {
+    display: none;
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .when-fine {
+      display: none;
+    }
+
+    .when-coarse {
+      display: inline;
+    }
+  }
+
+  .hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.4rem;
+  }
+
+  .hero__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+    border: 0;
+    background: none;
+    font: 500 var(--step--1) / 1.2 var(--font-body);
+    color: var(--ink-soft);
+    text-decoration: underline;
+    text-decoration-color: var(--chai-light);
+    text-underline-offset: 0.25em;
+    cursor: pointer;
+  }
+
+  .hero__toggle:hover {
+    color: var(--ink);
+  }
+
+  .hero__toggle svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    color: var(--chai);
+  }
+
+  .hero__toggle-on,
+  .hero__toggle[aria-pressed='true'] .hero__toggle-off {
+    display: none;
+  }
+
+  .hero__toggle[aria-pressed='true'] .hero__toggle-on {
+    display: inline;
+  }
+
+  .hero__art {
+    position: relative;
+    width: min(100%, 40rem);
+    justify-self: center;
+  }
+
+  /* the stain sits on paper: hides the illustration even through the ring's hollow middle */
+  .hero__art :global(.reveal) {
+    --reveal-surface: var(--paper);
+  }
+
+  /* ---- payoff note ---- */
+  .hero__note {
+    position: absolute;
+    left: -1.5rem;
+    bottom: 1.5rem;
+    display: flex;
+    align-items: flex-end;
+    gap: 0.25rem;
+    max-width: 15rem;
+    margin: 0;
+    font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem);
+    color: var(--chai-dark);
+    pointer-events: none;
+    transform: rotate(-4deg);
+  }
+
+  .hero__note-arrow {
+    flex: none;
+    width: 4.5rem;
+    order: 1;
+    color: var(--chai);
+    transform: translate(-0.5rem, -2.2rem) scaleX(-1) rotate(-10deg);
+  }
+
+  .hero__note-arrow path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 0.7s var(--ease-out) 0.25s;
+  }
+
+  .hero__note-arrow path + path {
+    transition-delay: 0.85s;
+    transition-duration: 0.3s;
+  }
+
+  .hero__note-text {
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity 0.6s var(--ease-out) 0.5s,
+      transform 0.6s var(--ease-out) 0.5s;
+  }
+
+  .hero.show-note .hero__note-arrow path {
+    stroke-dashoffset: 0;
+  }
+
+  .hero.show-note .hero__note-text {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ---- scroll cue ---- */
+  .hero__scroll {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(1rem, 0.5rem + 2vw, 2rem);
+    display: grid;
+    justify-items: center;
+    gap: 0.35rem;
+    font-family: var(--font-hand);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--chai);
+    text-decoration: none;
+    opacity: 0;
+    transform: translate(-50%, -8px);
+    transition:
+      opacity 0.8s var(--ease-out),
+      transform 0.8s var(--ease-out);
+  }
+
+  .hero__scroll svg {
+    width: 14px;
+    animation: bob 1.8s ease-in-out infinite;
+  }
+
+  .hero.show-scroll .hero__scroll,
+  .hero__scroll:focus-visible {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  @keyframes bob {
+    50% {
+      transform: translateY(4px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__scroll svg {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 60rem) {
+    .hero {
+      align-items: start;
+      padding-top: 4.5rem;
+    }
+
+    .hero__inner {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .hero__art {
+      order: -1;
+      width: min(92%, 30rem);
+    }
+
+    .hero__note {
+      left: -0.25rem;
+      bottom: -0.5rem;
+      max-width: 11rem;
+    }
+  }
+
+  /* no-JS: there is no interaction to wait for */
+  :global(html:not(.js)) .hero__toggle,
+  :global(html:not(.js)) .hero__instruction {
+    display: none;
+  }
+
+  :global(html:not(.js)) .hero__scroll {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+</style>

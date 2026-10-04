@@ -1,0 +1,155 @@
+---
+/**
+ * Two registered images: `top` is the surface, `bottom` is the layer underneath.
+ * Both must share the same aspect ratio (width/height). Behaviour: src/scripts/RevealLayer.ts
+ */
+interface Img {
+  src: string;
+  srcset?: string;
+}
+interface Props {
+  id: string;
+  top: Img;
+  bottom: Img;
+  /** describes the bottom layer (the real content) */
+  alt: string;
+  width: number;
+  height: number;
+  sizes?: string;
+  eager?: boolean;
+  cursor?: string;
+  /** hide the cursor label after the first interaction */
+  cursorOnce?: boolean;
+  brush?: number;
+  resteepDelay?: number;
+  resteepDuration?: number;
+  payoff?: number;
+  hold?: number;
+  autoStir?: number;
+  class?: string;
+}
+
+const {
+  id,
+  top,
+  bottom,
+  alt,
+  width,
+  height,
+  sizes = '100vw',
+  eager = false,
+  cursor = 'peek',
+  cursorOnce = false,
+  brush,
+  resteepDelay,
+  resteepDuration,
+  payoff,
+  hold,
+  autoStir,
+  class: className,
+} = Astro.props;
+const loading = eager ? 'eager' : 'lazy';
+---
+
+<div
+  id={id}
+  class:list={['reveal', className]}
+  style={`aspect-ratio: ${width} / ${height}`}
+  data-reveal
+  data-cursor={cursor}
+  data-cursor-once={cursorOnce ? '' : undefined}
+  data-brush={brush}
+  data-resteep-delay={resteepDelay}
+  data-resteep-duration={resteepDuration}
+  data-payoff={payoff}
+  data-hold={hold}
+  data-auto-stir={autoStir}
+>
+  <img
+    class="reveal__bottom"
+    src={bottom.src}
+    srcset={bottom.srcset}
+    sizes={sizes}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading}
+    decoding="async"
+    fetchpriority={eager ? 'high' : undefined}
+    draggable="false"
+  />
+  <img
+    class="reveal__top"
+    src={top.src}
+    srcset={top.srcset}
+    sizes={sizes}
+    alt=""
+    aria-hidden="true"
+    width={width}
+    height={height}
+    loading={loading}
+    decoding="async"
+    fetchpriority={eager ? 'high' : undefined}
+    draggable="false"
+  />
+  <canvas class="reveal__canvas" aria-hidden="true"></canvas>
+  <slot />
+</div>
+
+<style>
+  .reveal {
+    position: relative;
+    width: 100%;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .reveal > img,
+  .reveal__canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* No JS: the surface sits on top, translucent, so the story still shows through */
+  .reveal__top {
+    opacity: 0.6;
+  }
+
+  .reveal__canvas {
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  /* JS ready: the canvas takes over drawing the surface */
+  .reveal[data-ready] .reveal__top {
+    visibility: hidden;
+  }
+
+  .reveal[data-ready] .reveal__canvas {
+    opacity: 1;
+  }
+
+  /* reduced motion: whole-surface crossfade */
+  .reveal[data-ready].is-open .reveal__canvas {
+    opacity: 0;
+  }
+
+  .reveal :global(.reveal__ghost) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 22px;
+    height: 22px;
+    margin: -11px 0 0 -11px;
+    border-radius: 50%;
+    background: rgb(168 107 50 / 0.35);
+    border: 1.5px solid var(--chai);
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+</style>

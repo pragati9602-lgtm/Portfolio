@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <defs><pattern id="g" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#D4A877" stroke-opacity="0.45" stroke-width="1"/></pattern></defs>
+  <rect width="800" height="600" fill="#FAF5EC"/>
+  <rect width="800" height="600" fill="url(#g)"/>
+  <g fill="none" stroke="#5C3317" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="1 0" opacity="0.75">
+    <circle cx="560" cy="260" r="168"/><circle cx="563" cy="257" r="174" stroke-opacity="0.4"/>
+    <rect x="122" y="152" width="226" height="296" rx="16"/><rect x="118" y="147" width="234" height="304" rx="20" stroke-opacity="0.35"/>
+    <circle cx="235" cy="350" r="56"/>
+    <path d="M411 157 q 21 23 -136 -31" /><path d="M628 128 q 13 14 -131 24" /><path d="M299 99 q -58 -5 54 -32" /><path d="M326 126 q 61 -6 -130 32" /><path d="M206 194 q 80 14 -129 33" /><path d="M679 283 q -68 -32 -137 31" /><path d="M216 228 q 27 -42 116 -25" /><path d="M664 237 q 63 44 -68 -27" /><path d="M675 372 q -32 -13 -111 30" /><path d="M144 368 q -65 19 -55 23" /><path d="M624 298 q 0 -1 139 18" /><path d="M450 233 q -17 41 -68 -9" /><path d="M163 374 q -4 7 93 3" /><path d="M539 227 q 75 -51 -100 25" />
+  </g>
+  <g font-family="'Caveat', 'Comic Sans MS', cursive" font-size="34" fill="#A86B32">
+    <text x="470" y="500">rough 01: TODO</text>
+    <text x="90" y="110">process / sketch layer</text>
+  </g>
+  <path d="M440 470 q -40 -40 -60 -110" fill="none" stroke="#A86B32" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M372 372 l 8 -14 l 10 12" fill="none" stroke="#A86B32" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

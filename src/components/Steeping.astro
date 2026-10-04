@@ -1,0 +1,62 @@
+---
+// Placeholder for pages that aren't built yet (BRIEF.md §10, later phases).
+interface Props {
+  eyebrow: string;
+  title: string;
+}
+const { eyebrow, title } = Astro.props;
+---
+
+<section class="steeping wrap">
+  <span class="steeping__ring" aria-hidden="true"></span>
+  <p class="eyebrow">{eyebrow}</p>
+  <h1>{title}</h1>
+  <p class="hand steeping__note">this layer is still steeping…</p>
+  <a class="btn btn--ghost" href="/">← Back to the surface</a>
+</section>
+
+<style>
+  .steeping {
+    position: relative;
+    display: grid;
+    justify-items: start;
+    align-content: center;
+    gap: 1.25rem;
+    min-height: 80svh;
+    padding-block: 8rem 4rem;
+  }
+
+  h1 {
+    font-size: var(--step-4);
+    max-width: 14ch;
+  }
+
+  .steeping__note {
+    font-size: 1.8rem;
+  }
+
+  .steeping__ring {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: min(40vw, 22rem);
+    aspect-ratio: 1;
+    translate: 0 -50%;
+    border-radius: 50%;
+    border: clamp(10px, 2vw, 22px) solid rgb(168 107 50 / 0.16);
+    z-index: -1;
+    animation: spin 40s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      rotate: 360deg;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .steeping__ring {
+      animation: none;
+    }
+  }
+</style>

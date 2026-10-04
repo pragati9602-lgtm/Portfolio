@@ -1,0 +1,353 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import WorkCard from '../components/WorkCard.astro';
+import { selectedWork } from '../data/work';
+import { site } from '../data/site';
+
+const layers = [
+  {
+    n: '01',
+    title: 'The surface',
+    body: 'Colour, type, texture, form. The part everyone sees first, and the part most people stop at.',
+  },
+  {
+    n: '02',
+    title: 'The story',
+    body: 'Where it came from, who it’s for, what it’s quietly trying to say. I go looking for it before I draw anything.',
+  },
+  {
+    n: '03',
+    title: 'The steep',
+    body: 'Then I let that story soak back into the surface, so people feel it before they can explain it.',
+  },
+];
+
+// TODO: replace with real field notes (BRIEF.md §7)
+const notes = [
+  { title: 'TODO: The hidden chai stall in a tea brand’s logo', tag: 'Logo' },
+  { title: 'TODO: Why this packaging feels like a Sunday morning', tag: 'Packaging' },
+  { title: 'TODO: A poster that only makes sense up close', tag: 'Editorial' },
+];
+---
+
+<Base>
+  <Hero />
+
+  <!-- Layer 01: how I look -->
+  <section id="layers" class="section layers" aria-labelledby="layers-title">
+    <div class="wrap">
+      <header class="section__head">
+        <p class="eyebrow"><span class="layer-no">Layer 01</span> How I look at design</p>
+        <h2 id="layers-title" class="section__title" data-steep>
+          Branding has layers. Most people only see the top one.
+        </h2>
+      </header>
+      <ol class="layers__list">
+        {
+          layers.map((l, i) => (
+            <li class="layer" style={`--depth: ${i}`}>
+              <span class="layer__n hand">{l.n}</span>
+              <h3 class="layer__title">{l.title}</h3>
+              <p>{l.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Layer 02: selected work -->
+  <section id="work" class="section work" aria-labelledby="work-title">
+    <div class="wrap">
+      <header class="section__head section__head--split">
+        <div>
+          <p class="eyebrow"><span class="layer-no">Layer 02</span> Selected work</p>
+          <h2 id="work-title" class="section__title" data-steep>Finished pieces, and what's underneath them.</h2>
+        </div>
+        <p class="section__aside hand">hover a project to see the sketch under it</p>
+      </header>
+      <div class="work__grid">
+        {selectedWork.map((item, i) => <WorkCard item={item} index={i} />)}
+      </div>
+      <p class="section__more">
+        <a class="btn btn--ghost" href="/work">All work →</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Layer 03: field notes -->
+  <section id="notes" class="section notes" aria-labelledby="notes-title">
+    <div class="wrap">
+      <header class="section__head">
+        <p class="eyebrow"><span class="layer-no">Layer 03</span> Field notes</p>
+        <h2 id="notes-title" class="section__title" data-steep>Stories I've spotted in other people's designs.</h2>
+      </header>
+      <ul class="notes__list">
+        {
+          notes.map((n) => (
+            <li class="note">
+              <span class="note__ring" aria-hidden="true" />
+              <span class="note__tag">{n.tag}</span>
+              <h3 class="note__title">{n.title}</h3>
+              <span class="note__soon hand">steeping soon</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Layer 04: contact -->
+  <section id="contact" class="section contact" aria-labelledby="contact-title">
+    <div class="wrap contact__inner">
+      <p class="eyebrow"><span class="layer-no">Layer 04</span> Say hello</p>
+      <h2 id="contact-title" class="contact__title" data-steep>Got a brand with a story to tell?</h2>
+      <p class="contact__sub">
+        {site.availability} Pour a cup and write to me.
+      </p>
+      <a class="contact__email" href={`mailto:${site.email}`}>{site.email}</a>
+      <ul class="contact__links">
+        {
+          site.socials.map((s) => (
+            <li>
+              <a class="btn btn--ghost" href={s.href} rel="me noopener">
+                {s.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { initReveals } from '../scripts/RevealLayer';
+  initReveals();
+</script>
+
+<style>
+  .section {
+    padding-block: var(--section);
+    position: relative;
+  }
+
+  .section__head {
+    display: grid;
+    gap: 1rem;
+    max-width: 48rem;
+    margin-bottom: clamp(2.5rem, 1.5rem + 3vw, 4.5rem);
+  }
+
+  .section__head--split {
+    max-width: none;
+    grid-template-columns: minmax(0, 46rem) auto;
+    align-items: end;
+    justify-content: space-between;
+  }
+
+  .section__title {
+    font-size: var(--step-3);
+  }
+
+  .section__aside {
+    font-size: 1.5rem;
+    max-width: 14rem;
+    text-align: right;
+    transform: rotate(-3deg);
+  }
+
+  .layer-no {
+    display: inline-block;
+    margin-right: 0.6em;
+    padding: 0.2em 0.6em;
+    border: 1.5px solid var(--chai-light);
+    border-radius: 999px;
+    color: var(--chai);
+  }
+
+  .section__more {
+    margin-top: clamp(2.5rem, 1.5rem + 3vw, 4rem);
+    text-align: center;
+  }
+
+  /* ---- layers: three sheets of paper stacked a little deeper each time ---- */
+  .layers {
+    background:
+      radial-gradient(60rem 30rem at 85% 0%, rgb(249 200 70 / 0.12), transparent 60%),
+      var(--paper);
+  }
+
+  .layers__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 0.5rem + 2vw, 2rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .layer {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--paper-2) calc(40% + var(--depth) * 30%), var(--paper));
+    box-shadow: var(--shadow-paper);
+    transform: translateY(calc(var(--depth) * 1.5rem));
+  }
+
+  .layer__n {
+    font-size: 2.4rem;
+  }
+
+  .layer__title {
+    font-size: var(--step-2);
+  }
+
+  .layer p {
+    color: var(--ink-soft);
+  }
+
+  /* ---- work ---- */
+  .work__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(2rem, 1rem + 3vw, 3.5rem);
+  }
+
+  /* ---- notes ---- */
+  .notes {
+    background: var(--paper-2);
+  }
+
+  .notes__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1rem, 0.5rem + 2vw, 2rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .note {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 0.75rem;
+    min-height: 15rem;
+    padding: 2rem;
+    border-radius: var(--radius);
+    background: var(--paper);
+    overflow: hidden;
+    transition: transform 0.5s var(--ease-out);
+  }
+
+  .note:hover {
+    transform: translateY(-4px);
+  }
+
+  .note__ring {
+    position: absolute;
+    right: -3rem;
+    top: -3rem;
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    border: 10px solid rgb(168 107 50 / 0.14);
+    box-shadow: inset 0 0 0 2px rgb(168 107 50 / 0.12);
+    transition: transform 0.8s var(--ease-out);
+  }
+
+  .note:hover .note__ring {
+    transform: scale(1.12) rotate(20deg);
+  }
+
+  .note__tag {
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--denim);
+  }
+
+  .note__title {
+    font-size: var(--step-1);
+    line-height: 1.25;
+  }
+
+  .note__soon {
+    margin-top: auto;
+    font-size: 1.35rem;
+  }
+
+  /* ---- contact ---- */
+  .contact__inner {
+    display: grid;
+    justify-items: center;
+    gap: 1.25rem;
+    text-align: center;
+  }
+
+  .contact__title {
+    font-size: var(--step-4);
+    max-width: 16ch;
+  }
+
+  .contact__sub {
+    max-width: 32rem;
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+  }
+
+  .contact__email {
+    margin-top: 0.5rem;
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-style: italic;
+    color: var(--chai-dark);
+    text-decoration-color: var(--zest);
+    text-decoration-thickness: 3px;
+    overflow-wrap: anywhere;
+  }
+
+  .contact__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (max-width: 60rem) {
+    .layers__list,
+    .work__grid,
+    .notes__list {
+      grid-template-columns: 1fr;
+    }
+
+    .layer {
+      transform: none;
+    }
+
+    .section__head--split {
+      grid-template-columns: 1fr;
+    }
+
+    .section__aside {
+      text-align: left;
+    }
+  }
+
+  @media (min-width: 40rem) and (max-width: 60rem) {
+    .work__grid,
+    .notes__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

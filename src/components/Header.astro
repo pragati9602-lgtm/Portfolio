@@ -1,0 +1,188 @@
+---
+import { site, nav } from '../data/site';
+const path = Astro.url.pathname;
+---
+
+<header class="header">
+  <div class="header__inner wrap">
+    <a class="mark" href="/" aria-label={`${site.title}, home`}>
+      <svg class="mark__ring" viewBox="0 0 40 40" aria-hidden="true">
+        <path
+          d="M20 4.5c8.9 0 15.6 6.7 15.6 15.3 0 8.9-7 15.7-15.8 15.7C11 35.5 4.4 28.6 4.4 20 4.4 11.4 11.2 4.5 20 4.5Z"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="3.2"
+          stroke-linecap="round"
+          stroke-dasharray="78 6 10 4"></path>
+        <circle cx="14" cy="22" r="2.6" fill="currentColor"></circle>
+      </svg>
+      <span class="mark__word">{site.title}</span>
+    </a>
+
+    <button class="menu-btn" aria-expanded="false" aria-controls="site-nav">
+      <span class="menu-btn__label">Menu</span>
+    </button>
+
+    <nav id="site-nav" class="nav" aria-label="Main">
+      <ul>
+        {
+          nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.menu-btn');
+  const navEl = document.getElementById('site-nav');
+  btn?.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') !== 'true';
+    btn.setAttribute('aria-expanded', String(open));
+    navEl?.classList.toggle('is-open', open);
+  });
+  navEl?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a')) {
+      btn?.setAttribute('aria-expanded', 'false');
+      navEl.classList.remove('is-open');
+    }
+  });
+</script>
+
+<style>
+  .header {
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 50;
+    padding-block: clamp(1rem, 0.6rem + 1.5vw, 1.75rem);
+  }
+
+  .header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .mark__ring {
+    width: 30px;
+    height: 30px;
+    color: var(--chai);
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .mark:hover .mark__ring {
+    transform: rotate(-35deg);
+  }
+
+  .mark__word {
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 100, 'WONK' 1;
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .nav ul {
+    display: flex;
+    gap: clamp(1rem, 0.5rem + 1.5vw, 2.25rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav a {
+    position: relative;
+    font-size: var(--step--1);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    padding-block: 0.4rem;
+  }
+
+  /* a little tea-coloured underline that soaks in on hover */
+  .nav a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.1rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--zest);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s var(--ease-out);
+  }
+
+  .nav a:hover::after,
+  .nav a[aria-current='page']::after {
+    transform: scaleX(1);
+  }
+
+  .menu-btn {
+    display: none;
+    font: 600 var(--step--1) / 1 var(--font-body);
+    color: var(--ink);
+    background: transparent;
+    border: 1.5px solid var(--ink);
+    border-radius: 999px;
+    padding: 0.6em 1.1em;
+    cursor: pointer;
+  }
+
+  @media (max-width: 40rem) {
+    .menu-btn {
+      display: inline-flex;
+    }
+
+    .nav {
+      position: absolute;
+      top: calc(100% - 0.25rem);
+      right: var(--gutter);
+      left: var(--gutter);
+      padding: 1rem 1.25rem;
+      background: var(--paper);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-paper);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-6px);
+      transition:
+        opacity 0.25s,
+        transform 0.25s var(--ease-out),
+        visibility 0.25s;
+    }
+
+    .nav.is-open {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+    }
+
+    .nav ul {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .nav a {
+      display: block;
+      font-size: var(--step-1);
+      padding-block: 0.5rem;
+    }
+  }
+</style>

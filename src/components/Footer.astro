@@ -1,0 +1,51 @@
+---
+import { site } from '../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <p>© {year} {site.name}</p>
+    <p class="hand footer__brew">brewed with chai &amp; curiosity</p>
+    <ul class="footer__links">
+      {
+        site.socials.map((s) => (
+          <li>
+            <a href={s.href} rel="me noopener">
+              {s.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: 1px solid rgb(168 107 50 / 0.25);
+    padding-block: 2rem;
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+  }
+
+  .footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+  }
+
+  .footer__brew {
+    font-size: 1.4rem;
+  }
+
+  .footer__links {
+    display: flex;
+    gap: 1.25rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+</style>

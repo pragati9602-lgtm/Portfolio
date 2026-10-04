@@ -1,0 +1,150 @@
+---
+// Custom cursor (BRIEF.md §5 #1). Only on fine pointers without reduced motion.
+---
+
+<div class="cursor" aria-hidden="true">
+  <div class="cursor__ring"></div>
+  <span class="cursor__label"></span>
+</div>
+
+<script>
+  const fine = window.matchMedia('(hover: hover) and (pointer: fine)');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  if (fine.matches && !reduced.matches) {
+    const el = document.querySelector<HTMLElement>('.cursor')!;
+    const label = el.querySelector<HTMLElement>('.cursor__label')!;
+    document.documentElement.classList.add('has-cursor');
+
+    let x = -100;
+    let y = -100;
+    let cx = x;
+    let cy = y;
+    let raf = 0;
+    let target: Element | null = null;
+
+    const loop = () => {
+      cx += (x - cx) * 0.28;
+      cy += (y - cy) * 0.28;
+      el.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+      raf = Math.abs(x - cx) + Math.abs(y - cy) > 0.1 ? requestAnimationFrame(loop) : 0;
+    };
+
+    const update = () => {
+      const reveal = target?.closest<HTMLElement>('[data-reveal]');
+      const link = target?.closest('a, button, [role="button"], label, summary');
+      el.classList.toggle('is-link', !!link && !reveal);
+      el.classList.toggle('is-reveal', !!reveal);
+
+      if (reveal) {
+        // ring matches the brush footprint, so you can see what you're about to uncover
+        const brush = Number(reveal.dataset.brush || 0.11);
+        const d = Math.max(28, reveal.getBoundingClientRect().width * brush * 1.7);
+        el.style.setProperty('--d', `${d}px`);
+        const quiet =
+          (reveal.dataset.state && reveal.dataset.state !== 'idle') ||
+          (reveal.hasAttribute('data-cursor-once') && reveal.hasAttribute('data-touched'));
+        label.textContent = quiet ? '' : reveal.dataset.cursor || '';
+      } else {
+        el.style.removeProperty('--d');
+        label.textContent = '';
+      }
+    };
+
+    window.addEventListener(
+      'pointermove',
+      (e) => {
+        if (e.pointerType !== 'mouse') return;
+        x = e.clientX;
+        y = e.clientY;
+        el.classList.add('is-visible');
+        if (e.target !== target) {
+          target = e.target as Element;
+          update();
+        }
+        if (!raf) raf = requestAnimationFrame(loop);
+      },
+      { passive: true },
+    );
+    document.addEventListener('pointerleave', () => el.classList.remove('is-visible'));
+    document.addEventListener('pointerdown', () => el.classList.add('is-down'));
+    document.addEventListener('pointerup', () => el.classList.remove('is-down'));
+    // labels change as reveals open, close, or get touched for the first time
+    for (const evt of ['reveal:first', 'reveal:open', 'reveal:resteep']) {
+      document.addEventListener(evt, update, true);
+    }
+  }
+</script>
+
+<style is:global>
+  html.has-cursor,
+  html.has-cursor * {
+    cursor: none !important;
+  }
+
+  .cursor {
+    --d: 12px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 300;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .cursor.is-visible {
+    opacity: 1;
+  }
+
+  .cursor__ring {
+    position: absolute;
+    left: calc(var(--d) / -2);
+    top: calc(var(--d) / -2);
+    width: var(--d);
+    height: var(--d);
+    border-radius: 50%;
+    background: var(--ink);
+    border: 1.5px solid transparent;
+    transition:
+      width 0.35s var(--ease-out),
+      height 0.35s var(--ease-out),
+      left 0.35s var(--ease-out),
+      top 0.35s var(--ease-out),
+      background-color 0.3s,
+      border-color 0.3s,
+      transform 0.2s;
+  }
+
+  .cursor.is-down .cursor__ring {
+    transform: scale(0.85);
+  }
+
+  .cursor.is-link {
+    --d: 46px;
+  }
+
+  .cursor.is-link .cursor__ring {
+    background: rgb(249 200 70 / 0.35);
+    border-color: var(--ink);
+  }
+
+  .cursor.is-reveal .cursor__ring {
+    background: rgb(168 107 50 / 0.12);
+    border-color: rgb(92 51 23 / 0.55);
+    border-style: dashed;
+  }
+
+  .cursor__label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translate(-50%, calc(var(--d) / 2 + 8px));
+    white-space: nowrap;
+    font-family: var(--font-hand);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--chai-dark);
+  }
+
+</style>

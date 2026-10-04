@@ -1,0 +1,36 @@
+/* Design tokens: BRIEF.md §4 */
+:root {
+  /* Colour: paper and chai carry the page, illustration colours mark what's revealed or interactive */
+  --paper: #faf5ec;
+  --paper-2: #f2e8d8;
+  --ink: #2a1c12;
+  --ink-soft: #6b5444;
+  --chai: #a86b32;
+  --chai-light: #d4a877;
+  --chai-dark: #5c3317;
+  --zest: #f28c28;
+  --pulp: #f9c846;
+  --juice: #e2583e;
+  --denim: #2e5a6b;
+
+  /* Type */
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-hand: 'Caveat', 'Comic Sans MS', cursive;
+
+  --step--1: clamp(0.875rem, 0.84rem + 0.15vw, 0.95rem);
+  --step-0: clamp(1.0625rem, 1rem + 0.25vw, 1.125rem);
+  --step-1: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+  --step-2: clamp(1.6rem, 1.4rem + 1vw, 2.2rem);
+  --step-3: clamp(2.1rem, 1.7rem + 2vw, 3.4rem);
+  --step-4: clamp(2.75rem, 1.9rem + 4.2vw, 5.5rem);
+
+  /* Space & layout */
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 3rem);
+  --section: clamp(5rem, 3rem + 8vw, 10rem);
+  --max: 78rem;
+  --radius: 14px;
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --shadow-paper: 0 1px 0 rgb(42 28 18 / 0.04), 0 12px 30px -12px rgb(92 51 23 / 0.25);
+}
