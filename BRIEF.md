@@ -81,10 +81,11 @@ Header nav: logo/wordmark (left) · Work · Notes · About · Contact (right). F
 - **No JS:** show the illustration with the stain as a static, slightly transparent overlay. The page must never be blank.
 - **Accessibility:** canvas gets `aria-hidden="true"`; the `<img>` underneath carries the description, e.g. *"Illustration of a person asleep on a giant orange slice, surrounded by burgers, donuts, pizza and popcorn, hidden beneath a chai stain."*
 
-### 3.4 Asset notes (important)
-- The files currently in `assets/hero/` are **placeholders** exported on white backgrounds. For the final build, export **both on the same artboard size (e.g. 2400×1350) with transparent backgrounds** as WebP (with alpha) plus a PNG fallback, perfectly aligned.
-- Until then, use `mix-blend-mode: multiply` on the stain/illustration so the white areas disappear into the paper background.
-- Target size: < 250 KB each. Also export a 1200 px version for mobile (`srcset`).
+### 3.4 Asset notes
+- `assets/hero/chai-stain.webp` and `assets/hero/illustration.webp` are **final**: 2000×1125 WebP, transparent backgrounds, on the same artboard and already aligned. Stack them at identical size and position and they line up.
+- Bounding boxes on the artboard: stain ≈ x 552–1448, y 132–957; illustration ≈ x 653–1385, y 185–958. The stain fully covers the illustration, so nothing peeks out before interaction. Crop both images to the same union box if you want smaller files, but keep them registered.
+- Generate a 1200 px wide version of each for mobile (`srcset`) and a PNG fallback. Keep each file < 250 KB.
+- Because the backgrounds are transparent, the warm `--paper` colour shows through around the art; no blend-mode tricks needed.
 
 ---
 
@@ -244,7 +245,7 @@ Run one phase at a time. Review in the browser before continuing.
 
 ## 11. Content checklist (what you need to prepare)
 
-- [ ] Final hero art: stain + illustration on the **same artboard**, transparent backgrounds (§3.4)
+- [x] Final hero art: stain + illustration on the same artboard, transparent backgrounds (§3.4)
 - [ ] Your name, role title, one-sentence positioning statement
 - [ ] 4–6 projects, each with: final images, **process images** (sketches/roughs, needed for the layer-peek), the brief, your insight, outcome
 - [ ] 3 Field Notes ideas (brands whose hidden stories you've noticed)
